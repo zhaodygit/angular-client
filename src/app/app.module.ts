@@ -1,4 +1,5 @@
-import { HttpClientModule } from '@angular/common/http';
+import { AuthorizationHeaderInterceptor } from './oidc/authorization-header.interceptor';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
@@ -13,6 +14,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { TodoTableComponent } from './components/todo-table/todo-table.component';
 import { AddTodoComponent } from './components/add-todo/add-todo.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SigninOidcComponent } from './oidc/signin-oidc/signin-oidc.component';
+import { RedirectSilentRenewComponent } from './oidc/redirect-silent-renew/redirect-silent-renew.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     NavbarComponent,
     DashboardComponent,
     TodoTableComponent,
-    AddTodoComponent
+    AddTodoComponent,
+    SigninOidcComponent,
+    RedirectSilentRenewComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +50,13 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     MatSnackBarModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthorizationHeaderInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
